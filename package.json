@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Turn your awesome list into an HTTP API",
   "main": "src/index.js",
+  "bin": "src/index.js",
   "scripts": {
     "start": "node $npm_package_main",
     "test": "echo \"Error: no test specified\" && exit 1"

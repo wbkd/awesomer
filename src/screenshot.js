@@ -24,7 +24,7 @@ async function run(data, page, currentIndex, dest) {
             }
         } catch (err) {
             console.error(`Error fetching page for ${url}`, err);
-            return run(data, page, currentIndex + 1);
+            return run(data, page, currentIndex + 1, dest);
         }
     }
 

@@ -28,10 +28,8 @@ const main = async() => {
   fs.writeFileSync(datapath, JSON.stringify(result));
 
   if (image_dest) {
-    const imagepath = path.resolve(image_dest);
     try {
-      await mkdir(imagepath);
-      await screenshots(imagepath, result);
+      await screenshots(image_dest, result);
     } catch (err) {
       console.error('Error downloading images:', err);
     }

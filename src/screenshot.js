@@ -33,6 +33,7 @@ async function run(data, page, currentIndex, dest) {
 module.exports = async (dest, projects) => {
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
+  await mkdir(dest);
   const res = await run(projects, page, 0, dest);
   browser.close();
 }

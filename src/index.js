@@ -10,7 +10,7 @@ const screenshots = require('./screenshot');
 
 const main = async() => {
   const config = readConfig();
-  const { github_api_token, dest, image_dest } = config;
+  const { github_api_token: token, dest, image_dest } = config;
 
   try {
     const projects = await awesomeParser();

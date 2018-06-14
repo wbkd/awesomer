@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const mkdir = require('make-dir');
 const puppeteer = require('puppeteer');
 
 async function run(data, page, currentIndex, dest) {

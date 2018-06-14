@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const mkdir = require('make-dir');
 const readConfig = require('./config');
 const graphqlQuery = require('./graphql-query');
 const githubParser = require('./github-parser');

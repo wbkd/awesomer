@@ -16,7 +16,7 @@ async function run(data, page, currentIndex, dest) {
         try {
             await page.goto(url);
 
-            const filename = path.resolve('images', `${data[currentIndex].name}.jpeg`);
+            const filename = path.resolve(dest, `${data[currentIndex].name}.jpeg`);
 
             if (!fs.existsSync(filename)) {
                 await page.screenshot({ path: filename, quality: 80 });

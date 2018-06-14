@@ -12,11 +12,12 @@ const main = async() => {
   const config = readConfig();
   const { github_api_token: token, dest, image_dest } = config;
 
+  let result;
   try {
     const projects = await awesomeParser();
     const query = JSON.stringify(graphqlQuery(projects));
     const githubResults = await githubParser.getProjects({query, token});
-    const result = await githubParser.parseResult(githubResults, projects);
+    result = await githubParser.parseResult(githubResults, projects);
   } catch (err) {
     console.error('Runtime error:', err);
     process.exit(1);

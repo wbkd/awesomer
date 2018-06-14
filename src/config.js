@@ -8,7 +8,7 @@ module.exports = () => {
   .file({file: 'config.json'})
   .defaults({
     dest: 'data.json',
-    image_dest: 'images'
+    image_dest: false
   })
   .required(['github_api_token']);
 

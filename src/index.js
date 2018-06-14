@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const mkdir = require('make-dir');
 const readConfig = require('./config');
 const graphqlQuery = require('./graphql-query');
 const githubParser = require('./github-parser');
@@ -26,8 +27,15 @@ const main = async() => {
   const datapath = path.resolve(dest);
   fs.writeFileSync(datapath, JSON.stringify(result));
 
-  const imagepath = path.resolve(image_dest);
-  await screenshots(imagepath, result);
+  if (image_dest) {
+    const imagepath = path.resolve(image_dest);
+    try {
+      await mkdir(imagepath);
+      await screenshots(imagepath, result);
+    } catch (err) {
+      console.error('Error downloading images:', err);
+    }
+  }
 };
 
 main().catch(console.error);

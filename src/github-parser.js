@@ -52,7 +52,7 @@ const parseResult = async (result, projects) => {
         description: listEntry && listEntry.description,
         category: listEntry && listEntry.category,
         homepage: project.homepageUrl,
-        license: project.license,
+        license: project.licenseInfo.name,
         stars: project.stargazers.totalCount,
         contributors,
         owner: project.owner.login,

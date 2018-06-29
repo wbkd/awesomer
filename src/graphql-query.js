@@ -21,7 +21,9 @@ module.exports = (projects) => {
         name
         description
         homepageUrl
-        license
+        licenseInfo{
+            name
+        }
         stargazers {
             totalCount
         }

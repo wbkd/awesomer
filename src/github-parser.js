@@ -52,7 +52,6 @@ const parseResult = async (result, projects) => {
         description: listEntry && listEntry.description,
         category: listEntry && listEntry.category,
         homepage: project.homepageUrl,
-        license: project.licenseInfo.name,
         stars: project.stargazers.totalCount,
         contributors,
         owner: project.owner.login,
@@ -64,6 +63,7 @@ const parseResult = async (result, projects) => {
       };
 
       if (project.ref) entry.lastUpdate = project.ref.target.committedDate;
+      if (project.licenseInfo) entry.license = project.licenseInfo.name;
       githubProjects.push(entry)
     }
   }

@@ -3,10 +3,10 @@ const github = require('@octokit/rest')();
 
 const fs = require('fs');
 
-const getProjects = async ({query='', url='https://api.github.com/graphql', token='', method='POST'}) => {
+const getProjects = async ({ query = '', url = 'https://api.github.com/graphql', token = '', method = 'POST' }) => {
   github.authenticate({
     type: 'token',
-    token
+    token,
   });
 
   try {
@@ -15,8 +15,8 @@ const getProjects = async ({query='', url='https://api.github.com/graphql', toke
       url,
       data: query,
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     };
 
     const response = await axios(req);
@@ -36,12 +36,12 @@ const parseResult = async (result, projects) => {
   for (res in result) {
     const project = result[res];
     if (project) {
-      const listEntry = projects.find(p => p && (p.name.toLowerCase() === project.name.toLowerCase()));
+      const listEntry = projects.find((p) => p && p.name.toLowerCase() === project.name.toLowerCase());
 
-      const githubRequest = await github.repos.getContributors({
+      const githubRequest = await github.repos.listContributors({
         owner: project.owner.login,
         repo: project.name,
-        per_page: 100
+        per_page: 100,
       });
 
       const contributors = await sumContributors(githubRequest, 0);
@@ -59,12 +59,12 @@ const parseResult = async (result, projects) => {
         pullRequests: project.pullRequests.totalCount,
         watchers: project.watchers.totalCount,
         url: project.url,
-        size: project.diskUsage
+        size: project.diskUsage,
       };
 
       if (project.ref) entry.lastUpdate = project.ref.target.committedDate;
       if (project.licenseInfo) entry.license = project.licenseInfo.name;
-      githubProjects.push(entry)
+      githubProjects.push(entry);
     }
   }
 
@@ -84,5 +84,5 @@ const sumContributors = async (request, i) => {
 
 module.exports = {
   getProjects,
-  parseResult
+  parseResult,
 };

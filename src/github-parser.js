@@ -1,14 +1,12 @@
 const axios = require('axios');
-const github = require('@octokit/rest')();
+const { Octokit } = require('@octokit/rest');
 
-const fs = require('fs');
-
-const getProjects = async ({ query = '', url = 'https://api.github.com/graphql', token = '', method = 'POST' }) => {
-  github.authenticate({
-    type: 'token',
-    token,
-  });
-
+const getProjects = async ({
+  query = '',
+  url = 'https://api.github.com/graphql',
+  token = '',
+  method = 'POST',
+}) => {
   try {
     const req = {
       method,
@@ -21,6 +19,7 @@ const getProjects = async ({ query = '', url = 'https://api.github.com/graphql',
 
     const response = await axios(req);
     const githubErrors = response.data.errors;
+
     if (githubErrors) {
       console.error(`Error requesting ${url}:`, githubErrors);
     }
@@ -31,20 +30,29 @@ const getProjects = async ({ query = '', url = 'https://api.github.com/graphql',
   }
 };
 
-const parseResult = async (result, projects) => {
+const parseResult = async (result, projects, token) => {
   const githubProjects = [];
+  const octokit = new Octokit({
+    type: 'token',
+    token,
+  });
+
   for (res in result) {
     const project = result[res];
     if (project) {
-      const listEntry = projects.find((p) => p && p.name.toLowerCase() === project.name.toLowerCase());
+      const listEntry = projects.find(
+        (p) => p && p.name.toLowerCase() === project.name.toLowerCase()
+      );
 
-      const githubRequest = await github.repos.listContributors({
-        owner: project.owner.login,
-        repo: project.name,
-        per_page: 100,
-      });
+      const contributors = await octokit.paginate(
+        octokit.rest.issues.listContributors,
+        {
+          owner: project.owner.login,
+          repo: project.name,
+        }
+      );
 
-      const contributors = await sumContributors(githubRequest, 0);
+      const contributorsCount = contributors.length;
 
       const entry = {
         name: project.name,
@@ -53,7 +61,7 @@ const parseResult = async (result, projects) => {
         category: listEntry && listEntry.category,
         homepage: project.homepageUrl,
         stars: project.stargazers.totalCount,
-        contributors,
+        contributors: contributorsCount,
         owner: project.owner.login,
         issues: project.issues.totalCount,
         pullRequests: project.pullRequests.totalCount,
@@ -69,17 +77,6 @@ const parseResult = async (result, projects) => {
   }
 
   return githubProjects;
-};
-
-const sumContributors = async (request, i) => {
-  const contributors = request.data.length;
-  const sum = i + contributors;
-  if (github.hasNextPage(request)) {
-    const nextPage = await github.getNextPage(request);
-    return sumContributors(nextPage, sum);
-  } else {
-    return sum;
-  }
 };
 
 module.exports = {

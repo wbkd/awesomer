@@ -8,16 +8,17 @@ const githubParser = require('./github-parser');
 const awesomeParser = require('./awesome-parser');
 const screenshots = require('./screenshot');
 
-const main = async() => {
+const main = async () => {
   const config = readConfig();
-  const { github_api_token: token, dest, image_dest } = config;
+  const { github_api_token: token, dest, image_dest, list_url } = config;
 
   let result;
   try {
-    const projects = await awesomeParser();
+    const projects = await awesomeParser(list_url);
     const query = JSON.stringify(graphqlQuery(projects));
-    const githubResults = await githubParser.getProjects({query, token});
-    result = await githubParser.parseResult(githubResults, projects);
+
+    const githubResults = await githubParser.getProjects({ query, token });
+    result = await githubParser.parseResult(githubResults, projects, token);
   } catch (err) {
     console.error('Runtime error:', err);
     process.exit(1);

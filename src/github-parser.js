@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { Octokit } = require('@octokit/rest');
 
 const getProjects = async ({
   query = '',
@@ -32,10 +31,6 @@ const getProjects = async ({
 
 const parseResult = async (result, projects, token) => {
   const githubProjects = [];
-  const octokit = new Octokit({
-    type: 'token',
-    token,
-  });
 
   for (res in result) {
     const project = result[res];
@@ -44,16 +39,6 @@ const parseResult = async (result, projects, token) => {
         (p) => p && p.name.toLowerCase() === project.name.toLowerCase()
       );
 
-      const contributors = await octokit.paginate(
-        octokit.rest.issues.listContributors,
-        {
-          owner: project.owner.login,
-          repo: project.name,
-        }
-      );
-
-      const contributorsCount = contributors.length;
-
       const entry = {
         name: project.name,
         githubDescription: project.description,
@@ -61,7 +46,6 @@ const parseResult = async (result, projects, token) => {
         category: listEntry && listEntry.category,
         homepage: project.homepageUrl,
         stars: project.stargazers.totalCount,
-        contributors: contributorsCount,
         owner: project.owner.login,
         issues: project.issues.totalCount,
         pullRequests: project.pullRequests.totalCount,

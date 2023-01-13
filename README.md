@@ -21,7 +21,7 @@ Either passing them as command-line arguments or exporting them as environment v
 
 ```JSON
 {
-  "GITHUB_API_KEY": "asnd29n30r2fmnoGREG%§gr3094wfenoi3",
+  "GITHUB_API_KEY": "...",
   "LIST_URL": "https://raw.githubusercontent.com/wbkd/awesome-d3/master/README.md",
   "DEST": "static/data/projects.json",
   "IMAGE_DEST": "static/images/"
